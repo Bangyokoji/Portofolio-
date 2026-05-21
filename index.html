@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id" x-data="{ darkMode: true, isRed: false, isPlaying: false }" :class="darkMode ? 'dark' : ''">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SETIAGRAPHY | Visual Portfolio</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700,600&f[]=space-grotesk@300,500,700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        premiumRed: '#FF3B30',
+                        darkEbony: '#050505',
+                    },
+                    fontFamily: {
+                        display: ['Clash Display', 'sans-serif'],
+                        sans: ['Space Grotesk', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        [x-cloak] { display: none !important; }
+        html { scroll-behavior: smooth; cursor: none; }
+        
+        .fixed-video-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -100; overflow: hidden; pointer-events: none;
+        }
+        .fixed-video-bg video {
+            width: 100%; height: 100%; object-fit: cover; 
+            filter: grayscale(1) brightness(0.12);
+        }
+
+        .masonry-grid {
+            column-count: 1; column-gap: 1.5rem;
+        }
+        @media (min-width: 768px) { .masonry-grid { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { column-count: 3; } }
+        
+        .masonry-card {
+            break-inside: avoid; margin-bottom: 1.5rem;
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .masonry-card img { width: 100%; border-radius: 1rem; display: block; border: 1px solid rgba(255,255,255,0.1); }
+
+        .c-cursor {
+            width: 12px; height: 12px; background: #FF3B30;
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
+            mix-blend-mode: difference;
+        }
+
+        .profile-anchor {
+            transition: all 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            background: #fff;
+            border: 6px solid #000;
+            box-shadow: 15px 15px 0px 0px #000;
+            z-index: 50;
+        }
+        .dark .profile-anchor { background: #111; border-color: #fff; box-shadow: 15px 15px 0px 0px #fff; }
+
+        .is-red-active {
+            background: #FF3B30 !important;
+            transform: scale(1.04) rotate(-3deg);
+            box-shadow: 25px 25px 0px 0px #000 !important;
+        }
+        .dark .is-red-active { box-shadow: 25px 25px 0px 0px #fff !important; }
+
+        .video-box {
+            border: 5px solid #000; border-radius: 2rem; overflow: hidden;
+            box-shadow: 15px 15px 0px 0px #FF3B30; background: #000;
+        }
+        .dark .video-box { border-color: #fff; }
+    </style>
+</head>
+<body class="bg-[#F8F8F8] dark:bg-darkEbony text-black dark:text-white font-sans overflow-x-hidden selection:bg-premiumRed selection:text-white">
+
+    <div class="c-cursor hidden md:block"></div>
+
+    <div class="fixed-video-bg">
+        <video autoplay muted loop playsinline>
+            <source src="https://raw.githubusercontent.com/Bangyokoji/dekdok/f836af3c5f0220952a963b8ac702858696d9aa52/ini%20beground.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <audio x-ref="audio" id="bgMusic" loop>
+        <source src="https://raw.githubusercontent.com/Bangyokoji/dekdok/f836af3c5f0220952a963b8ac702858696d9aa52/mucic.mp3" type="audio/mp3">
+    </audio>
+
+    <nav class="fixed w-full z-[100] p-6 flex justify-between items-center mix-blend-difference">
+        <div class="font-display font-bold text-3xl tracking-tighter uppercase italic text-white">SETIA<span class="text-premiumRed">GRAPHY.</span></div>
+        <div class="flex items-center gap-6">
+            <button @click="isPlaying = !isPlaying; isPlaying ? $refs.audio.play() : $refs.audio.pause()" class="bg-white/10 px-6 py-2 rounded-full border border-white/20 text-[10px] font-bold uppercase tracking-widest text-white hover:bg-premiumRed transition-all">
+                <span x-text="isPlaying ? 'Playing' : 'Music Off'"></span>
+            </button>
+            <button @click="darkMode = !darkMode" class="w-10 h-10 border border-white/20 rounded-full flex items-center justify-center text-white">
+                <i data-lucide="sun" x-show="darkMode"></i>
+                <i data-lucide="moon" x-show="!darkMode"></i>
+            </button>
+        </div>
+    </nav>
+
+    <section class="min-h-screen flex items-center px-6 pt-20 relative z-10">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-end pb-12">
+            <div class="lg:col-span-7 space-y-10" id="hero-text">
+                <div class="space-y-4">
+                    <h2 class="text-premiumRed font-display font-bold text-xl tracking-[0.4em] uppercase">Visual Architect</h2>
+                    <h1 class="font-display font-bold text-6xl md:text-[120px] leading-[0.75] uppercase tracking-tighter">
+                        SETIA <br> <span class="italic text-premiumRed">GRAPHY.</span>
+                    </h1>
+                </div>
+                <p class="max-w-md text-xl opacity-60 font-light border-l-4 border-premiumRed pl-8 leading-relaxed">
+                    Profesional Filmmaker & Photographer. Mengabdikan setiap detail dengan presisi teknis dan estetika tinggi.
+                </p>
+                <div class="flex gap-4 pt-4">
+                    <a href="https://wa.me/6285713813068" target="_blank" class="bg-black dark:bg-white text-white dark:text-black px-12 py-6 font-display font-bold uppercase text-xs tracking-widest hover:bg-premiumRed dark:hover:bg-premiumRed transition-all shadow-[10px_10px_0px_0px_#FF3B30]">Hire Studio</a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex justify-center lg:justify-end">
+                <div @click="isRed = !isRed" class="profile-anchor relative w-full max-w-[420px] aspect-[3/4] p-3 cursor-pointer" :class="isRed ? 'is-red-active' : ''">
+                    <div class="w-full h-full relative overflow-hidden rounded-xl bg-zinc-200 dark:bg-zinc-800">
+                        <img x-show="!isRed" x-transition.opacity.duration.400ms src="https://drive.google.com/thumbnail?id=14Ygh2G2jU3xQTtiYCgL_EZPljU38KXqD&sz=w1000" class="absolute inset-0 w-full h-full object-cover brightness-105 contrast-110">
+                        <img x-show="isRed" x-transition.opacity.duration.400ms src="https://drive.google.com/thumbnail?id=1Q7AdtNS7e17IYJw8HqMLb97wtZ70kH6O&sz=w1000" class="absolute inset-0 w-full h-full object-cover brightness-110 contrast-120">
+                    </div>
+                    <div class="absolute -bottom-8 -right-8 bg-premiumRed text-white px-8 py-5 font-display font-bold text-xs uppercase tracking-widest shadow-2xl transition-all" :class="isRed ? '-rotate-12 bg-white !text-black border-4 border-black' : 'rotate-12'">
+                        <span x-text="isRed ? 'FORMAL FOTO' : 'CLICK'"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="photos" class="py-32 px-6 relative z-10 border-t border-black/5 dark:border-white/5">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+                <h2 class="font-display font-bold text-6xl md:text-9xl uppercase tracking-tighter leading-none">Stills.</h2>
+                <p class="text-sm font-bold opacity-40 uppercase tracking-[0.5em] italic">Archive / Photography</p>
+            </div>
+            
+            <div class="masonry-grid" id="gallery-reveal">
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=19dFTDAH-Vy0XCHpT5j51RE-SLr8UpXEv&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=1VM1N-EwqrHPMsWrz9wUvjItm4Bp8N0vh&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=1VUkXtU_raDUznjEBYa1dmkOZNVVgH8Zf&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=1_HSo_6Uc7OvwDWcpRYwMxlh_qVHrhQzL&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=1tLEMnoOX9Og22rcbibSGNDPlQgwuj07f&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=117CSiLQfq13ASjXEaj2k3N9ULezBSMXT&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=1xW8dNJIy-dLnO0w1H13zBpBMWDaXJHsG&sz=w1000"></div>
+                <div class="masonry-card reveal"><img src="https://drive.google.com/thumbnail?id=1S0bNTphMlO9bpldUSBaN-5Km_oSQo3qd&sz=w1000"></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="motion" class="py-32 px-6 bg-zinc-100 dark:bg-white/5 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="font-display font-bold text-5xl md:text-[100px] uppercase mb-24 tracking-tighter italic text-center leading-none">Motion.</h2>
+            
+            <div class="grid md:grid-cols-2 gap-20 items-start">
+                <div class="reveal">
+                    <div class="video-box">
+                        <video controls class="w-full h-auto block" poster="https://raw.githubusercontent.com/Bangyokoji/Portofolio-/f78761012e6f46b4ce893a285b4ace76ce4b12ee/d807b7810d2c217ea58fb82008b29c45.jpg">
+                            <source src="https://raw.githubusercontent.com/Bangyokoji/Portofolio-/c354c96f0d6f989c71c5858e771210ab7d1999ec/PENERIMAAN%20TAMU%20AMBALAN%20.....TIM%20EDITING-%40satriyaay_%40hidingfrom_fate%20TIM%20KAMERAMEN-%40satriyaay_%40h%20(1).mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="mt-8 font-display font-bold text-2xl uppercase tracking-tighter italic">Sequence Archive 01</p>
+                </div>
+                <div class="reveal md:mt-40">
+                    <div class="video-box">
+                        <video controls class="w-full h-auto block" poster="https://raw.githubusercontent.com/Bangyokoji/Portofolio-/f78761012e6f46b4ce893a285b4ace76ce4b12ee/d807b7810d2c217ea58fb82008b29c45.jpg">
+                            <source src="https://raw.githubusercontent.com/Bangyokoji/Portofolio-/c354c96f0d6f989c71c5858e771210ab7d1999ec/%F0%9F%9A%A8JANGANN%20LUPAA%202%20HARI%20LAGII%20!!PPDB%20SMK%20NEGERI%201%20KALIBAGOR%20DIBUKAA!!%E2%80%A2%E2%80%A2%E2%80%A2%20%20Pantau%20teruss%20untuk%20inf.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <p class="mt-8 font-display font-bold text-2xl uppercase tracking-tighter italic">Campaign Story 02</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-40 px-6 bg-premiumRed text-white text-center relative z-10">
+        <h2 class="font-display font-extrabold text-7xl md:text-[14vw] leading-[0.8] uppercase tracking-tighter mb-16 italic">Start Journey.</h2>
+        <div class="flex flex-col md:flex-row justify-center gap-8 items-center">
+            <a href="https://wa.me/6285713813068" target="_blank" class="bg-black text-white px-16 py-8 rounded-full font-display font-bold uppercase tracking-widest hover:scale-110 transition-transform shadow-2xl">WhatsApp</a>
+            <a href="https://www.instagram.com/setiagraphyy" target="_blank" class="bg-white text-black px-16 py-8 rounded-full font-display font-bold uppercase tracking-widest hover:scale-110 transition-transform shadow-2xl">Instagram</a>
+        </div>
+    </section>
+
+    <footer class="py-12 text-center text-[10px] font-bold uppercase tracking-[0.6em] opacity-30">
+        SETIAGRAPHY &copy; 2026 VISUAL SIGNATURE.
+    </footer>
+
+    <script>
+        const dot = document.querySelector(".c-cursor");
+        window.addEventListener("mousemove", (e) => {
+            gsap.to(dot, { x: e.clientX - 6, y: e.clientY - 6, duration: 0.1 });
+        });
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from("#hero-text > *", { y: 120, opacity: 0, duration: 1.5, stagger: 0.2, ease: "expo.out" });
+        gsap.from(".profile-anchor", { scale: 0.75, opacity: 0, duration: 1.5, delay: 0.4, ease: "back.out(1.4)" });
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: { trigger: el, start: "top 85%" },
+                y: 100, opacity: 0, duration: 1.5, ease: "power4.out"
+            });
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
