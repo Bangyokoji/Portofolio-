@@ -5,9 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SETIAGRAPHY | Visual Portfolio</title>
     
-    <!-- Premium Fonts -->
     <link href="https://api.fontshare.com/v2/css?f[]=clash-display@700,600&f[]=space-grotesk@300,500,700&display=swap" rel="stylesheet">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -19,14 +17,8 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        premiumRed: '#FF3B30',
-                        darkEbony: '#050505',
-                    },
-                    fontFamily: {
-                        display: ['Clash Display', 'sans-serif'],
-                        sans: ['Space Grotesk', 'sans-serif'],
-                    }
+                    colors: { premiumRed: '#FF3B30', darkEbony: '#050505' },
+                    fontFamily: { display: ['Clash Display', 'sans-serif'], sans: ['Space Grotesk', 'sans-serif'] }
                 }
             }
         }
@@ -34,73 +26,77 @@
 
     <style>
         [x-cloak] { display: none !important; }
-        html { scroll-behavior: smooth; cursor: none; }
+        html { scroll-behavior: smooth; cursor: none; overflow-x: hidden; }
         
+        /* Loader Screen */
+        #loader {
+            position: fixed; inset: 0; background: #000;
+            display: flex; align-items: center; justify-content: center;
+            z-index: 10000;
+        }
+
+        /* Video Background di paling bawah */
         .fixed-video-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -10; overflow: hidden; pointer-events: none;
+            z-index: -20; overflow: hidden; pointer-events: none;
         }
         .fixed-video-bg video {
             width: 100%; height: 100%; object-fit: cover; 
-            filter: grayscale(1) brightness(0.15); 
+            filter: grayscale(1) brightness(0.1); 
         }
 
-        /* PROFIL SOLID */
-        .profile-anchor {
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            background: #ffffff !important; 
-            border: 6px solid #000;
-            box-shadow: 15px 15px 0px 0px #FF3B30;
-            z-index: 50; position: relative;
+        /* PROFIL FIX - SANGAT SOLID */
+        .profile-card {
+            background: #FFFFFF !important; /* Latar Putih Solid */
+            border: 8px solid #000;
+            box-shadow: 20px 20px 0px 0px #FF3B30;
+            position: relative;
+            z-index: 999; /* Di atas segalanya */
+            width: 100%; max-width: 380px; aspect-ratio: 3/4;
+            overflow: visible;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .dark .profile-anchor { border-color: #fff; box-shadow: 15px 15px 0px 0px #fff; }
+        .dark .profile-card { border-color: #fff; box-shadow: 20px 20px 0px 0px #fff; }
 
-        .img-bright {
-            filter: brightness(1.2) contrast(1.1); 
-            object-fit: cover; width: 100%; height: 100%;
+        .img-layer {
+            width: 100%; height: 100%; position: relative;
+            background: #eee; overflow: hidden;
+        }
+        .img-layer img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; display: block; opacity: 1 !important;
         }
 
         .c-cursor {
             width: 12px; height: 12px; background: #FF3B30;
-            position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
+            position: fixed; border-radius: 50%; pointer-events: none; z-index: 10001;
             mix-blend-mode: difference;
         }
 
-        /* MASONRY CARD & CAPTION */
-        .masonry-item {
-            break-inside: avoid; margin-bottom: 2rem;
-            position: relative; cursor: pointer;
-        }
+        /* Aesthetic Caption */
+        .masonry-item { break-inside: avoid; margin-bottom: 2rem; cursor: pointer; position: relative; }
         .caption-box {
-            background: #FF3B30; color: white;
-            padding: 1rem; margin-top: -5px;
-            border: 2px solid black;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 700; text-transform: uppercase;
-            font-size: 10px; letter-spacing: 0.1em;
-            transform: translateY(-10px); opacity: 0;
-            transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            background: #FF3B30; color: white; padding: 12px;
+            font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+            font-size: 11px; text-transform: uppercase; border: 2px solid #000;
+            margin-top: -4px; opacity: 0; transform: translateY(-10px);
+            transition: 0.4s ease;
         }
-        .caption-active .caption-box {
-            transform: translateY(0); opacity: 1;
-            box-shadow: 8px 8px 0px 0px #000;
-        }
-        .dark .caption-active .caption-box { box-shadow: 8px 8px 0px 0px #fff; }
+        .caption-active .caption-box { opacity: 1; transform: translateY(0); box-shadow: 8px 8px 0px 0px #000; }
 
-        .app-card {
-            background: white; border: 2px solid black; 
-            transition: all 0.3s ease;
-        }
+        .app-card { background: white; border: 3px solid black; transition: 0.3s ease; }
         .dark .app-card { background: #111; border-color: white; }
-
-        .video-box {
-            border: 4px solid #000; border-radius: 1.5rem; overflow: hidden;
-            box-shadow: 10px 10px 0px 0px #FF3B30;
-        }
-        .dark .video-box { border-color: #fff; }
     </style>
 </head>
 <body class="bg-[#F8F8F8] dark:bg-darkEbony text-zinc-900 dark:text-white font-sans overflow-x-hidden selection:bg-premiumRed selection:text-white">
+
+    <!-- INTRO LOADER -->
+    <div id="loader">
+        <div class="text-center">
+            <h1 id="loader-text" class="font-display font-bold text-4xl md:text-7xl text-white italic tracking-widest uppercase opacity-0">SETIAGRAPHY.</h1>
+            <div id="loader-bar" class="w-0 h-[2px] bg-premiumRed mt-4 mx-auto"></div>
+        </div>
+    </div>
 
     <div class="c-cursor hidden md:block"></div>
 
@@ -115,15 +111,12 @@
     </audio>
 
     <nav class="fixed w-full z-[100] p-6 flex justify-between items-center">
-        <div class="font-display font-bold text-2xl tracking-tighter uppercase italic text-zinc-900 dark:text-white">
-            SETIA<span class="text-premiumRed">GRAPHY.</span>
-        </div>
+        <div class="nav-el font-display font-bold text-2xl uppercase italic">SETIA<span class="text-premiumRed">GRAPHY.</span></div>
         <div class="flex items-center gap-4">
-            <button @click="isPlaying = !isPlaying; isPlaying ? $refs.audio.play() : $refs.audio.pause()" 
-                    class="bg-zinc-900 dark:bg-white text-white dark:text-black px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">
+            <button @click="isPlaying = !isPlaying; isPlaying ? $refs.audio.play() : $refs.audio.pause()" class="nav-el bg-black dark:bg-white text-white dark:text-black px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-xl">
                 <span x-text="isPlaying ? 'Playing' : 'Music Off'"></span>
             </button>
-            <button @click="darkMode = !darkMode" class="w-10 h-10 border border-zinc-900/30 dark:border-white/30 rounded-full flex items-center justify-center text-zinc-900 dark:text-white">
+            <button @click="darkMode = !darkMode" class="nav-el w-10 h-10 border border-black/20 dark:border-white/20 rounded-full flex items-center justify-center">
                 <i data-lucide="sun" x-show="darkMode"></i>
                 <i data-lucide="moon" x-show="!darkMode"></i>
             </button>
@@ -135,27 +128,30 @@
             
             <div class="lg:col-span-7 space-y-8" id="hero-text">
                 <div class="space-y-2">
-                    <h2 class="text-premiumRed font-display font-bold text-lg tracking-[0.3em] uppercase">Visual Architect</h2>
-                    <h1 class="font-display font-bold text-6xl md:text-[110px] leading-[0.8] uppercase tracking-tighter text-zinc-900 dark:text-white">
+                    <h2 class="text-premiumRed font-display font-bold text-lg tracking-widest uppercase hero-reveal">Visual Architect</h2>
+                    <h1 class="font-display font-bold text-6xl md:text-[100px] leading-[0.8] uppercase tracking-tighter hero-reveal">
                         SETIA <br> <span class="italic text-premiumRed">GRAPHY.</span>
                     </h1>
                 </div>
-                <p class="max-w-md text-lg font-medium border-l-4 border-premiumRed pl-6 text-zinc-800 dark:text-zinc-300">
+                <p class="max-w-md text-lg font-medium border-l-4 border-premiumRed pl-6 hero-reveal">
                     Videographer & Photographer. Mengabdikan setiap detail dengan presisi teknis dan estetika tinggi.
                 </p>
-                <div class="pt-4">
-                    <a href="https://wa.me/6285713813068" target="_blank" class="bg-zinc-900 dark:bg-white text-white dark:text-black px-12 py-5 font-display font-bold uppercase text-xs tracking-widest hover:bg-premiumRed transition-all shadow-[8px_8px_0px_0px_#FF3B30]">Hubungi</a>
+                <div class="pt-4 hero-reveal">
+                    <a href="https://wa.me/6285713813068" target="_blank" class="bg-black dark:bg-white text-white dark:text-black px-12 py-5 font-display font-bold uppercase text-xs tracking-widest hover:bg-premiumRed transition-all shadow-[10px_10px_0px_0px_#FF3B30] inline-block">Hubungi</a>
                 </div>
             </div>
 
+            <!-- PROFIL SECTION (DIJAMIN MUNCUL) -->
             <div class="lg:col-span-5 flex justify-center lg:justify-end">
-                <div @click="isRed = !isRed" class="profile-anchor w-full max-w-[380px] aspect-[3/4] p-3 cursor-pointer" :class="isRed ? 'scale-105 rotate-2' : ''">
-                    <div class="w-full h-full relative overflow-hidden bg-white">
-                        <img x-show="!isRed" src="https://drive.google.com/thumbnail?id=14Ygh2G2jU3xQTtiYCgL_EZPljU38KXqD&sz=w1000" class="img-bright absolute inset-0">
-                        <img x-show="isRed" src="https://drive.google.com/thumbnail?id=1Q7AdtNS7e17IYJw8HqMLb97wtZ70kH6O&sz=w1000" class="img-bright absolute inset-0">
+                <div @click="isRed = !isRed" class="profile-card p-3 cursor-pointer" :class="isRed ? 'rotate-2 scale-105' : ''">
+                    <div class="img-layer">
+                        <!-- Foto Biasa -->
+                        <img x-show="!isRed" src="https://lh3.googleusercontent.com/u/0/d/14Ygh2G2jU3xQTtiYCgL_EZPljU38KXqD" x-transition.opacity>
+                        <!-- Foto Background Merah -->
+                        <img x-show="isRed" src="https://lh3.googleusercontent.com/u/0/d/1Q7AdtNS7e17IYJw8HqMLb97wtZ70kH6O" x-transition.opacity>
                     </div>
-                    <div class="absolute -bottom-5 -right-5 bg-premiumRed text-white px-6 py-4 font-display font-bold text-[10px] uppercase tracking-widest">
-                        <span x-text="isRed ? 'FORMAL LOOK' : 'TAP HERE'"></span>
+                    <div class="absolute -bottom-6 -right-6 bg-premiumRed text-white px-6 py-4 font-display font-bold text-[11px] uppercase shadow-2xl">
+                        <span x-text="isRed ? 'RED BACKGROUND' : 'TAP ME'"></span>
                     </div>
                 </div>
             </div>
@@ -164,74 +160,72 @@
     </section>
 
     <!-- SOFTWARE STACK -->
-    <section class="py-20 px-6 relative z-10">
+    <section class="py-24 px-6 relative z-10">
         <div class="max-w-7xl mx-auto">
-            <h2 class="font-display font-bold text-3xl md:text-5xl uppercase tracking-tighter mb-10 text-zinc-900 dark:text-white">Software <span class="text-premiumRed italic">Stack.</span></h2>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                <div class="app-card p-5 flex flex-col items-center gap-3 rounded-xl shadow-sm">
-                    <img src="https://drive.google.com/thumbnail?id=1KukAdAmuE7kDhD62umjLxOi97hRZUWyb&sz=w200" class="w-10 h-10 object-contain">
-                    <span class="font-display font-bold text-[10px] uppercase tracking-wider">CapCut</span>
+            <h2 class="reveal font-display font-bold text-3xl md:text-5xl uppercase tracking-tighter mb-12">Software <span class="text-premiumRed italic">Stack.</span></h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <div class="app-card reveal p-6 flex flex-col items-center gap-4 rounded-xl shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1KukAdAmuE7kDhD62umjLxOi97hRZUWyb" class="w-12 h-12 object-contain">
+                    <span class="font-display font-bold text-[10px] uppercase">CapCut</span>
                 </div>
-                <div class="app-card p-5 flex flex-col items-center gap-3 rounded-xl shadow-sm">
-                    <img src="https://drive.google.com/thumbnail?id=1paxZUT2r6GU_z5kDsL3CtPNAGPW-1VI1&sz=w200" class="w-10 h-10 object-contain">
-                    <span class="font-display font-bold text-[10px] uppercase tracking-wider">Lightroom</span>
+                <div class="app-card reveal p-6 flex flex-col items-center gap-4 rounded-xl shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1paxZUT2r6GU_z5kDsL3CtPNAGPW-1VI1" class="w-12 h-12 object-contain">
+                    <span class="font-display font-bold text-[10px] uppercase">Lightroom</span>
                 </div>
-                <div class="app-card p-5 flex flex-col items-center gap-3 rounded-xl shadow-sm">
-                    <img src="https://drive.google.com/thumbnail?id=1jiNNzoXBQnJSoR76ikaKM3ifZi68oDee&sz=w200" class="w-10 h-10 object-contain">
-                    <span class="font-display font-bold text-[10px] uppercase tracking-wider">Snapseed</span>
+                <div class="app-card reveal p-6 flex flex-col items-center gap-4 rounded-xl shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1jiNNzoXBQnJSoR76ikaKM3ifZi68oDee" class="w-12 h-12 object-contain">
+                    <span class="font-display font-bold text-[10px] uppercase">Snapseed</span>
                 </div>
-                <div class="app-card p-5 flex flex-col items-center gap-3 rounded-xl shadow-sm">
-                    <img src="https://drive.google.com/thumbnail?id=1HJuA0U_tpKbHjudj2CSI1pHMgaSYodmU&sz=w200" class="w-10 h-10 object-contain">
-                    <span class="font-display font-bold text-[10px] uppercase tracking-wider">PixelLab</span>
+                <div class="app-card reveal p-6 flex flex-col items-center gap-4 rounded-xl shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1HJuA0U_tpKbHjudj2CSI1pHMgaSYodmU" class="w-12 h-12 object-contain">
+                    <span class="font-display font-bold text-[10px] uppercase">PixelLab</span>
                 </div>
-                <div class="app-card p-5 flex flex-col items-center gap-3 rounded-xl shadow-sm">
-                    <img src="https://drive.google.com/thumbnail?id=1_E9cAZgoRxOrhU2hVO4d8ZZg8iQbhDHO&sz=w200" class="w-10 h-10 object-contain">
-                    <span class="font-display font-bold text-[10px] uppercase tracking-wider">Canva</span>
+                <div class="app-card reveal p-6 flex flex-col items-center gap-4 rounded-xl shadow-sm">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1_E9cAZgoRxOrhU2hVO4d8ZZg8iQbhDHO" class="w-12 h-12 object-contain">
+                    <span class="font-display font-bold text-[10px] uppercase">Canva</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- STILLS SECTION WITH CAPTIONS -->
-    <section id="photos" class="py-24 px-6 relative z-10 border-t border-zinc-200 dark:border-white/5">
+    <!-- STILLS SECTION: 7 FOTO -->
+    <section id="photos" class="py-24 px-6 relative z-10 border-t border-black/10">
         <div class="max-w-7xl mx-auto">
-            <h2 class="font-display font-bold text-6xl md:text-8xl uppercase tracking-tighter mb-16 text-zinc-900 dark:text-white">Stills.</h2>
-            
-            <div class="columns-1 md:columns-2 lg:columns-3 gap-8">
+            <h2 class="reveal font-display font-bold text-6xl md:text-[120px] uppercase tracking-tighter mb-16">Stills.</h2>
+            <div class="columns-1 md:columns-2 lg:columns-3 gap-10">
                 
-                <!-- Foto 1 -->
                 <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
-                    <img src="https://drive.google.com/thumbnail?id=19dFTDAH-Vy0XCHpT5j51RE-SLr8UpXEv&sz=w1000" class="rounded-xl w-full border-2 border-black/10">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/19dFTDAH-Vy0XCHpT5j51RE-SLr8UpXEv" class="rounded-xl w-full border-2 border-black/10">
                     <div class="caption-box">"Menangkap jiwa dalam heningnya bayangan."</div>
                 </div>
 
-                <!-- Foto 2 -->
                 <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
-                    <img src="https://drive.google.com/thumbnail?id=1VM1N-EwqrHPMsWrz9wUvjItm4Bp8N0vh&sz=w1000" class="rounded-xl w-full border-2 border-black/10">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1VM1N-EwqrHPMsWrz9wUvjItm4Bp8N0vh" class="rounded-xl w-full border-2 border-black/10">
                     <div class="caption-box">"Simfoni alam yang tak terucap kata."</div>
                 </div>
 
-                <!-- Foto 3 -->
                 <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
-                    <img src="https://drive.google.com/thumbnail?id=1VUkXtU_raDUznjEBYa1dmkOZNVVgH8Zf&sz=w1000" class="rounded-xl w-full border-2 border-black/10">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1xW8dNJIy-dLnO0w1H13zBpBMWDaXJHsG" class="rounded-xl w-full border-2 border-black/10">
+                    <div class="caption-box">"Bayangan adalah bukti bahwa cahaya sedang bercerita."</div>
+                </div>
+
+                <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1VUkXtU_raDUznjEBYa1dmkOZNVVgH8Zf" class="rounded-xl w-full border-2 border-black/10">
                     <div class="caption-box">"Setiap sudut adalah sebuah arsitektur visual."</div>
                 </div>
 
-                <!-- Foto 4 -->
                 <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
-                    <img src="https://drive.google.com/thumbnail?id=1_HSo_6Uc7OvwDWcpRYwMxlh_qVHrhQzL&sz=w1000" class="rounded-xl w-full border-2 border-black/10">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1_HSo_6Uc7OvwDWcpRYwMxlh_qVHrhQzL" class="rounded-xl w-full border-2 border-black/10">
                     <div class="caption-box">"Cahaya adalah pena, kamera adalah kertasnya."</div>
                 </div>
 
-                <!-- Foto 5 -->
                 <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
-                    <img src="https://drive.google.com/thumbnail?id=1tLEMnoOX9Og22rcbibSGNDPlQgwuj07f&sz=w1000" class="rounded-xl w-full border-2 border-black/10">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/1tLEMnoOX9Og22rcbibSGNDPlQgwuj07f" class="rounded-xl w-full border-2 border-black/10">
                     <div class="caption-box">"Membekukan waktu dalam satu bingkai abadi."</div>
                 </div>
 
-                <!-- Foto 6 -->
                 <div x-data="{ open: false }" @click="open = !open" :class="open ? 'caption-active' : ''" class="masonry-item reveal">
-                    <img src="https://drive.google.com/thumbnail?id=117CSiLQfq13ASjXEaj2k3N9ULezBSMXT&sz=w1000" class="rounded-xl w-full border-2 border-black/10">
+                    <img src="https://lh3.googleusercontent.com/u/0/d/117CSiLQfq13ASjXEaj2k3N9ULezBSMXT" class="rounded-xl w-full border-2 border-black/10">
                     <div class="caption-box">"Estetika dalam ketidakteraturan yang sempurna."</div>
                 </div>
 
@@ -240,16 +234,16 @@
     </section>
 
     <!-- MOTION -->
-    <section id="motion" class="py-24 px-6 relative z-10 bg-zinc-200/30 dark:bg-white/5">
+    <section id="motion" class="py-32 px-6 relative z-10 bg-zinc-200/50 dark:bg-white/5">
         <div class="max-w-7xl mx-auto text-center">
-            <h2 class="font-display font-bold text-6xl md:text-8xl uppercase tracking-tighter mb-20 italic">Motion.</h2>
-            <div class="grid md:grid-cols-2 gap-10">
-                <div class="video-box reveal">
+            <h2 class="reveal font-display font-bold text-6xl md:text-9xl uppercase tracking-tighter mb-20 italic">Motion.</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div class="reveal border-4 border-black dark:border-white rounded-3xl overflow-hidden shadow-2xl">
                     <video controls class="w-full h-auto block">
                         <source src="https://raw.githubusercontent.com/Bangyokoji/Portofolio-/c354c96f0d6f989c71c5858e771210ab7d1999ec/PENERIMAAN%20TAMU%20AMBALAN%20.....TIM%20EDITING-%40satriyaay_%40hidingfrom_fate%20TIM%20KAMERAMEN-%40satriyaay_%40h%20(1).mp4" type="video/mp4">
                     </video>
                 </div>
-                <div class="video-box reveal md:mt-20">
+                <div class="reveal border-4 border-black dark:border-white rounded-3xl overflow-hidden shadow-2xl md:mt-32">
                     <video controls class="w-full h-auto block">
                         <source src="https://raw.githubusercontent.com/Bangyokoji/Portofolio-/c354c96f0d6f989c71c5858e771210ab7d1999ec/%F0%9F%9A%A8JANGANN%20LUPAA%202%20HARI%20LAGII%20!!PPDB%20SMK%20NEGERI%201%20KALIBAGOR%20DIBUKAA!!%E2%80%A2%E2%80%A2%E2%80%A2%20%20Pantau%20teruss%20untuk%20inf.mp4" type="video/mp4">
                     </video>
@@ -259,33 +253,40 @@
     </section>
 
     <!-- CONTACT -->
-    <section id="contact" class="py-32 px-6 bg-premiumRed text-white text-center relative z-20">
-        <h2 class="font-display font-extrabold text-6xl md:text-[10vw] leading-none uppercase tracking-tighter mb-12 italic">Let's Work.</h2>
-        <div class="flex flex-wrap justify-center gap-6">
-            <a href="https://wa.me/6285713813068" target="_blank" class="bg-black px-12 py-6 rounded-full font-display font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-2xl">WhatsApp</a>
-            <a href="https://www.instagram.com/setiagraphyy" target="_blank" class="bg-white text-black px-12 py-6 rounded-full font-display font-bold uppercase tracking-widest hover:scale-105 transition-all shadow-2xl">Instagram</a>
+    <section id="contact" class="py-40 px-6 bg-premiumRed text-white text-center relative z-20">
+        <h2 class="reveal font-display font-extrabold text-7xl md:text-[10vw] leading-none uppercase tracking-tighter mb-16 italic">Start Journey.</h2>
+        <div class="flex flex-wrap justify-center gap-8">
+            <a href="https://wa.me/6285713813068" target="_blank" class="reveal bg-black text-white px-16 py-8 rounded-full font-display font-bold uppercase tracking-widest hover:scale-110 transition-all shadow-2xl">WhatsApp</a>
+            <a href="https://www.instagram.com/setiagraphyy" target="_blank" class="reveal bg-white text-black px-16 py-8 rounded-full font-display font-bold uppercase tracking-widest hover:scale-110 transition-all shadow-2xl">Instagram</a>
         </div>
     </section>
 
-    <footer class="py-10 text-center text-[10px] font-bold uppercase tracking-[0.5em] opacity-40">
+    <footer class="py-12 text-center text-[10px] font-bold uppercase tracking-[0.5em] opacity-40">
         SETIAGRAPHY &copy; 2026 VISUAL SIGNATURE.
     </footer>
 
     <script>
         const dot = document.querySelector(".c-cursor");
         window.addEventListener("mousemove", (e) => {
-            gsap.to(dot, { x: e.clientX - 6, y: e.clientY - 6, duration: 0.1 });
+            gsap.to(dot, { x: e.clientX - 6, y: e.clientY - 6, duration: 0.15 });
         });
 
         gsap.registerPlugin(ScrollTrigger);
 
-        gsap.from("#hero-text > *", { y: 100, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out" });
-        gsap.from(".profile-anchor", { scale: 0.8, opacity: 0, duration: 1.5, ease: "expo.out" });
+        window.addEventListener("load", () => {
+            const tl = gsap.timeline();
+            tl.to("#loader-text", { opacity: 1, duration: 0.8, y: -10, ease: "power4.out" })
+              .to("#loader-bar", { width: "150px", duration: 0.7, ease: "expo.inOut" }, "-=0.3")
+              .to("#loader", { yPercent: -100, duration: 0.8, ease: "expo.inOut", delay: 0.1 })
+              .from(".nav-el", { y: -50, opacity: 0, duration: 0.6, stagger: 0.1, ease: "back.out" })
+              .from(".hero-reveal", { y: 50, opacity: 0, duration: 0.8, stagger: 0.1, ease: "power4.out" }, "-=0.2")
+              .from(".profile-card", { scale: 0.8, opacity: 0, duration: 1, ease: "back.out(1.7)" }, "-=0.6");
+        });
 
         document.querySelectorAll('.reveal').forEach(el => {
             gsap.from(el, {
                 scrollTrigger: { trigger: el, start: "top 90%" },
-                y: 50, opacity: 0, duration: 1, ease: "power3.out"
+                y: 30, opacity: 0, duration: 0.8, ease: "power3.out"
             });
         });
 
